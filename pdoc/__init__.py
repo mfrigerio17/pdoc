@@ -457,6 +457,7 @@ __version__ = "13.0.0"  # this is read from setup.py
 
 from pathlib import Path
 from typing import overload
+import shutil
 
 from pdoc import doc, extract, render
 
@@ -503,6 +504,24 @@ def pdoc(
             outfile = output_directory / f"{module.fullname.replace('.', '/')}.html"
             outfile.parent.mkdir(parents=True, exist_ok=True)
             outfile.write_bytes(out.encode())
+
+    if render.env.globals["ext_css"]:
+        if output_directory :
+            dst = output_directory / "styles"
+            dst.mkdir(parents=True, exist_ok=True)
+            src =  Path(__file__).parent / "templates"
+
+            shutil.copy(src/"theme.css", dst)
+            shutil.copy(src/"content.css", dst)
+            shutil.copy(src/"layout.css", dst)
+            shutil.copy(src/"syntax-highlighting.css", dst)
+            shutil.copy(src/"resources"/"bootstrap-reboot.min.css", dst)
+            csstext = render.ext_css_file()
+            cssfile = output_directory / "style.css"
+            cssfile.write_bytes(csstext.encode())
+        else:
+            pass
+            #TODO log warning
 
     assert output_directory
 

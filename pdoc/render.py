@@ -43,6 +43,7 @@ def configure(
     search: bool = True,
     show_source: bool = True,
     template_directory: Path | None = None,
+    external_css: bool = False,
 ):
     """
     Configure the rendering output.
@@ -81,6 +82,7 @@ def configure(
     env.globals["logo_link"] = logo_link
     env.globals["footer_text"] = footer_text
     env.globals["search"] = search
+    env.globals["ext_css"] = external_css
 
 
 @defuse_unsafe_reprs()
@@ -97,6 +99,7 @@ def html_module(
     - If `mtime` is given, include additional JavaScript on the page for live-reloading.
       This is only passed by `pdoc.web`.
     """
+    env.globals["nesting_depth"]=module.fullname.count('.')
     return env.get_template("module.html.jinja2").render(
         module=module,
         all_modules=all_modules,
@@ -113,6 +116,7 @@ def html_module(
 @defuse_unsafe_reprs()
 def html_index(all_modules: Mapping[str, pdoc.doc.Module]) -> str:
     """Renders the module index."""
+    env.globals["nesting_depth"]=0
     return env.get_template("index.html.jinja2").render(
         all_modules=all_modules,
         root_module_name=root_module_name(all_modules),
@@ -127,6 +131,9 @@ def html_error(error: str, details: str = "") -> str:
         details=details,
     )
 
+def ext_css_file():
+    """Renders the main CSS file, when the user chooses not to embed the styles"""
+    return env.get_template("style.css.jinja2").render()
 
 @defuse_unsafe_reprs()
 def search_index(all_modules: Mapping[str, pdoc.doc.Module]) -> str:

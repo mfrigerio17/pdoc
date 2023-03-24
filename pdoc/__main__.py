@@ -118,6 +118,13 @@ renderopts.add_argument(
     "Alternatively, put your templates in $XDG_CONFIG_HOME/pdoc and pdoc will automatically find them.",
 )
 
+renderopts.add_argument(
+    "--external-css",
+    action=BooleanOptionalAction,
+    default=False,
+    help="Do not embed the CSS code inside the generated HTML pages.",
+)
+
 miscargs = parser.add_argument_group(f"{white}Miscellaneous Options{default}")
 miscargs.add_argument(
     "-h",
@@ -179,6 +186,7 @@ def cli(args: list[str] | None = None) -> None:
         search=opts.search,
         show_source=opts.show_source,
         template_directory=opts.template_directory,
+        external_css=opts.external_css,
     )
 
     if opts.output_directory:

@@ -11,6 +11,9 @@
         {% endif %}
     {% endblock %}
     {% block head %}{% endblock %}
+    {% if ext_css %}
+    <link rel="stylesheet" href="{{ '../'*nesting_depth }}style.css"/>
+    {% else %}
     {% filter minify_css | indent %}
         {% block style %}
             <style>{% include "resources/bootstrap-reboot.min.css" %}</style>
@@ -29,6 +32,7 @@
             {% endblock %}
         {% endblock %}
     {% endfilter %}
+    {% endif %}
     {% if math %}{% include "math.html.jinja2" %}{% endif %}
 </head>
 <body>
