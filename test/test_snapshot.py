@@ -157,6 +157,13 @@ snapshots = [
     Snapshot("top_level_reimports", ["top_level_reimports"]),
     Snapshot("type_checking_imports"),
     Snapshot("type_stub", min_version=(3, 10)),
+    Snapshot("external_css",
+        ["demo.py"],
+        render_options={
+            "external_css": True,
+        },
+        with_output_directory=True,
+    ),
 ]
 
 
